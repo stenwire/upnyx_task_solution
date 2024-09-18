@@ -1,5 +1,8 @@
-from rest_framework import serializers
+from django.contrib.auth import authenticate
+from rest_framework import exceptions, serializers
 from authentication.models import User
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
 
 class SignupSerializer(serializers.ModelSerializer):
   class Meta:
@@ -20,3 +23,29 @@ class SignupSerializer(serializers.ModelSerializer):
     ret.pop('password', None)
     ret["tokens"] = instance.tokens
     return ret
+
+
+class LoginTokenObtainPairSerializer(TokenObtainPairSerializer):
+    username_field = 'username'
+
+    def validate(self, attrs):
+        credentials = {
+            'username': attrs.get('username'),
+            'password': attrs.get('password')
+        }
+
+        user = authenticate(**credentials)
+
+        if user:
+            if not user.is_active:
+                raise exceptions.AuthenticationFailed('User is deactivated')
+
+            data = {}
+            refresh = self.get_token(user)
+
+            data['refresh'] = str(refresh)
+            data['access'] = str(refresh.access_token)
+
+            return data
+        else:
+            raise exceptions.AuthenticationFailed('No active account found with the given credentials')
