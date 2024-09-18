@@ -11,6 +11,23 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+from typing import Literal
+
+import dj_database_url
+from pydantic import PostgresDsn
+from pydantic_settings import BaseSettings
+
+EnvironmentType = Literal["dev", "staging", "prod"]
+
+class GeneralSettings(BaseSettings):
+    DEBUG: bool = False
+    SECRET_KEY: str
+    ALLOWED_HOSTS: list[str]
+    DATABASE_URL: PostgresDsn
+    ENVIRONMENT: EnvironmentType = "dev"
+
+
+GENERAL_SETTINGS = GeneralSettings()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,17 +37,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-cyj1s)4m^%=68*ch5b!_pl90hcg2djx4=)g#ywhlf$ryrup#fp"
+SECRET_KEY = GENERAL_SETTINGS.SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = GENERAL_SETTINGS.DEBUG
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = GENERAL_SETTINGS.ALLOWED_HOSTS
 
 
 # Application definition
 
-INSTALLED_APPS = [
+DJANGO_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -38,6 +55,18 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
 ]
+
+THIRD_PARTY_APPS = [
+    "rest_framework",
+    "rest_framework_simplejwt",
+    "rest_framework.authtoken",
+    "corsheaders",
+    "django_extensions",
+]
+
+CUSTOM_APPS = []
+
+INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + CUSTOM_APPS
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -75,8 +104,12 @@ WSGI_APPLICATION = "config.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        **dj_database_url.config(conn_max_age=600, conn_health_checks=True),
+        "TIMEZONE": "UTC",
+        "ATOMIC_REQUESTS": True,
+        "OPTIONS": {
+            "client_encoding": "UTF8",
+        },
     }
 }
 
@@ -121,3 +154,5 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+CORS_ALLOW_ALL_ORIGINS = True
