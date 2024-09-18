@@ -64,7 +64,9 @@ THIRD_PARTY_APPS = [
     "django_extensions",
 ]
 
-CUSTOM_APPS = []
+CUSTOM_APPS = [
+    "authentication",
+]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + CUSTOM_APPS
 
@@ -156,3 +158,5 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 CORS_ALLOW_ALL_ORIGINS = True
+
+AUTH_USER_MODEL = "authentication.User"
