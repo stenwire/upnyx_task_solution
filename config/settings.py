@@ -20,6 +20,7 @@ from pydantic_settings import BaseSettings
 
 EnvironmentType = Literal["dev", "staging", "prod"]
 
+
 class GeneralSettings(BaseSettings):
     DEBUG: bool = False
     SECRET_KEY: str
@@ -27,9 +28,11 @@ class GeneralSettings(BaseSettings):
     DATABASE_URL: PostgresDsn
     ENVIRONMENT: EnvironmentType = "dev"
 
+
 class ChatTokenSettings(BaseSettings):
     MINIMUM: int = 100
     MAX: int = 4000
+
 
 CHAT_TOKEN_SETTINGS = ChatTokenSettings()
 
@@ -70,10 +73,7 @@ THIRD_PARTY_APPS = [
     "django_extensions",
 ]
 
-CUSTOM_APPS = [
-    "authentication",
-    "chat"
-]
+CUSTOM_APPS = ["authentication", "chat"]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + CUSTOM_APPS
 
@@ -171,9 +171,7 @@ AUTH_USER_MODEL = "authentication.User"
 REST_USE_JWT = True
 
 REST_FRAMEWORK = {
-    "DEFAULT_PERMISSION_CLASSES": (
-        "rest_framework.permissions.IsAuthenticated",
-    ),
+    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
         "rest_framework.authentication.SessionAuthentication",

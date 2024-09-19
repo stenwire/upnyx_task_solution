@@ -28,7 +28,7 @@ install:
 	@pipenv install --dev
 
 lint:
-	@docker compose run --rm app ruff check .
+	@docker compose run --rm app ruff check . --fix
 
 migrations:
 	@docker compose run --rm app python manage.py makemigrations
