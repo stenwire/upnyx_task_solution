@@ -1,8 +1,9 @@
-from rest_framework import generics, status
-from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
-from django.utils import timezone
 from django.conf import settings
+from django.utils import timezone
+from rest_framework import generics, status
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+
 from chat.models import Chat
 from chat.serializers import ChatSerializer
 
@@ -11,11 +12,13 @@ AVAILABLE_QUESTIONS = [
     "what does upnyx do",
     "what services does upnyx offer",
     "how to contact upnyx",
-    "where is upnyx located"
-    ]
+    "where is upnyx located",
+]
 
 PREDEFINED_RESPONSES = {
-    "hello": (f"Welcome to Upnyx Chat, you can ask these questions: {AVAILABLE_QUESTIONS}"),
+    "hello": (
+        f"Welcome to Upnyx Chat, you can ask these questions: {AVAILABLE_QUESTIONS}"
+    ),
     "what does upnyx do": (
         "We support decision makers like you to build/grow your organization. By partnering with you to identify bottlenecks "
         "and issues, craft a plan to improve business, and develop strategies to achieve sustainable results, we will provide "
@@ -30,22 +33,24 @@ PREDEFINED_RESPONSES = {
     ),
     "where is upnyx located": (
         "Head office:UPNyX Innovative Solutions, 11/725, Arunima, Kalluvarambu, Aramkallu, Karakulam PO, TrivandrumPIN:695581"
-    )
+    ),
 }
+
 
 def default_response(user_message):
     return f"Please ask any of these questions: {AVAILABLE_QUESTIONS}"
+
 
 class ChatListCreateView(generics.ListCreateAPIView):
     serializer_class = ChatSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return Chat.objects.filter(user=self.request.user).order_by('-timestamp')
+        return Chat.objects.filter(user=self.request.user).order_by("-timestamp")
 
     def perform_create(self, serializer):
         user = self.request.user
-        message = serializer.validated_data['message'].strip().lower()
+        message = serializer.validated_data["message"].strip().lower()
 
         # Check if user has sufficient tokens
         if user.tokens >= settings.CHAT_TOKEN_SETTINGS.MINIMUM:
@@ -53,7 +58,9 @@ class ChatListCreateView(generics.ListCreateAPIView):
             user.save()
 
             response = PREDEFINED_RESPONSES.get(message, default_response(message))
-            serializer.save(user=user, message=message, response=response, timestamp=timezone.now())
+            serializer.save(
+                user=user, message=message, response=response, timestamp=timezone.now()
+            )
         else:
             raise ValueError("Insufficient tokens.")
 

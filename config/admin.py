@@ -1,5 +1,6 @@
 from django.contrib import admin
 
+
 class UPNYXChatAdminSite(admin.AdminSite):
     site_header = "UPNYXChat Administration"
     site_title = "UPNYXChat"
