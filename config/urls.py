@@ -27,7 +27,8 @@ urlpatterns = [
         "api/v1/",
         include(
             [
-                path('auth/', include("authentication.urls"))
+                path('auth/', include("authentication.urls")),
+                path('', include("chat.urls"))
             ]
         ),
     ),

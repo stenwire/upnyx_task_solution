@@ -49,3 +49,9 @@ class LoginTokenObtainPairSerializer(TokenObtainPairSerializer):
             return data
         else:
             raise exceptions.AuthenticationFailed('No active account found with the given credentials')
+
+
+class AvailableChatTokensSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['tokens']
