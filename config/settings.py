@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
+from datetime import timedelta
 from pathlib import Path
 from typing import Literal
 
@@ -26,6 +27,11 @@ class GeneralSettings(BaseSettings):
     DATABASE_URL: PostgresDsn
     ENVIRONMENT: EnvironmentType = "dev"
 
+class ChatTokenSettings(BaseSettings):
+    MINIMUM: int = 100
+    MAX: int = 4000
+
+CHAT_TOKEN_SETTINGS = ChatTokenSettings()
 
 GENERAL_SETTINGS = GeneralSettings()
 
@@ -66,6 +72,7 @@ THIRD_PARTY_APPS = [
 
 CUSTOM_APPS = [
     "authentication",
+    "chat"
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + CUSTOM_APPS
@@ -160,3 +167,20 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 CORS_ALLOW_ALL_ORIGINS = True
 
 AUTH_USER_MODEL = "authentication.User"
+
+REST_USE_JWT = True
+
+REST_FRAMEWORK = {
+    "DEFAULT_PERMISSION_CLASSES": (
+        "rest_framework.permissions.IsAuthenticated",
+    ),
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+        "rest_framework.authentication.SessionAuthentication",
+    ),
+}
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
+    "AUTH_HEADER_TYPES": ("Bearer", "JWT"),
+}
