@@ -3,10 +3,8 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from django.utils import timezone
 from django.conf import settings
-from .models import Chat
-from .serializers import ChatSerializer
-from django.contrib.auth.models import User
-from rest_framework.authtoken.models import Token
+from chat.models import Chat
+from chat.serializers import ChatSerializer
 
 AVAILABLE_QUESTIONS = [
     "hello",
