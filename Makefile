@@ -46,7 +46,7 @@ shell:
 	@docker compose run --rm app python manage.py shell
 
 test:
-	@docker compose run --rm app py.test tests
+	@docker compose run --rm app py.test .
 
 testcase:
 	@docker compose run --rm app py.test $(test)

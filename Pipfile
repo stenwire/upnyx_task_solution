@@ -21,6 +21,8 @@ ruff = "*"
 pytest = "*"
 pytest-django = "*"
 django-extensions = "*"
+factory-boy = "*"
+pytest-factoryboy = "*"
 
 [requires]
 python_version = "3.11"
