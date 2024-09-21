@@ -50,6 +50,9 @@
 7. **Start the server:**
    ```bash
    make up
+
+   # to run tests
+   make test
    ```
 
 8. **Access the application:**
