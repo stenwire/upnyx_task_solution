@@ -1,4 +1,5 @@
-# upnyx_task_solution
+# Simplification of a token deduction chatbot API, kind of like using OpenAIs API
+> You're charged an amount of token to communicate with the chat-bot API
 
 ---
 
